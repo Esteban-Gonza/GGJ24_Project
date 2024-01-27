@@ -21,13 +21,12 @@ public class Enemy : MonoBehaviour
     public bool walkPointSet;
     public float walkPointRange;
 
-    //Attacking
-    public float timeBetweenAttacks;
-    bool alreadyAttacked;
+    public Vector3 lastPosition;
 
     //states
     public float sightRange, attackRange;
-    public bool bIsPatroling;
+    public bool bPlayerSeen;
+    public bool bAttackPlayer;
 
     //scan variables
     [SerializeField]
@@ -35,8 +34,6 @@ public class Enemy : MonoBehaviour
     private float scanRange = 45f;
     private float currentAngle = 0f;
     private float elapsedTime;
-
-
 
 
     private void Awake()
@@ -52,9 +49,22 @@ public class Enemy : MonoBehaviour
 
         Scan();
 
-        //bIsPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
+        if(bPlayerSeen)
+        {
+            state = EnemyBehaviour.LastPoint;
+        }
+        else
+        {
+            state = EnemyBehaviour.Patrol;
+        }
 
-        
+        bAttackPlayer = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
+
+        if (bAttackPlayer) 
+        {
+            state = EnemyBehaviour.Chase;
+        }
+
 
         //State tree
         switch (state)
@@ -114,6 +124,21 @@ public class Enemy : MonoBehaviour
     private void GoingToLastPoint()
     {
 
+        if (lastPosition != Vector3.zero)
+        {
+            agent.SetDestination(lastPosition);
+        }
+
+        Vector3 distanceToLastPosition = transform.position - lastPosition;
+
+        //Walkpoint Reached
+        if (distanceToLastPosition.magnitude < 2f)
+        {
+            bPlayerSeen = false;
+        }
+
+        Debug.Log("IA: Last pos... " + distanceToLastPosition.magnitude);
+
     }
 
     //----------------------------- Functions ---------------------------
@@ -134,6 +159,8 @@ public class Enemy : MonoBehaviour
         //------------------------------- debug -----------------------------
         if (Physics.Raycast(ray, out hit, sightRange, PlayerLayer))
         {
+            lastPosition = hit.transform.position;
+            bPlayerSeen = true;
             // Realizar acciones basadas en la colisión con un obstáculo
             Debug.DrawLine(ray.origin, hit.point, Color.red);
         }
@@ -177,5 +204,7 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
+        Gizmos.DrawWireSphere(lastPosition, 1f);
+
     }
 }
