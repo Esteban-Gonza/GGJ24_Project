@@ -11,6 +11,8 @@ public class Enemy : MonoBehaviour
     private EnemyBehaviour state;
     private NavMeshAgent agent;
 
+    public Transform Player;
+
     //patroling
     private Vector3 walkPoint;
     private bool walkPointSet;
@@ -30,7 +32,9 @@ public class Enemy : MonoBehaviour
 
     private void Awake()
     {
+        Player = GameObject.Find("PlayerObject").transform;
         agent = GetComponent<NavMeshAgent>();
+        state = EnemyBehaviour.Patrol;
     }
 
     private void Update()
@@ -40,22 +44,21 @@ public class Enemy : MonoBehaviour
         bIsPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
 
 
+        //if (!bIsPlayerInSightRange && !bIsPlayerInAttackRange)
+        //{
+        //    //Patroling();
+        //    state = EnemyBehaviour.Patrol;
+        //}
 
-        if (!bIsPlayerInSightRange && !bIsPlayerInAttackRange)
-        {
-            //Patroling();
-            state = EnemyBehaviour.Patrol;
-        }
+        //if (bIsPlayerInSightRange && !bIsPlayerInAttackRange)
+        //{
+        //    ActiveChasing();
+        //}
 
-        if (bIsPlayerInSightRange && !bIsPlayerInAttackRange)
-        {
-            ActiveChasing();
-        }
-
-        if (bIsPlayerInAttackRange && bIsPlayerInSightRange)
-        {
-            AttackPlayer();
-        }
+        //if (bIsPlayerInAttackRange && bIsPlayerInSightRange)
+        //{
+        //    AttackPlayer();
+        //}
 
         //State tree
         switch (state)
@@ -72,10 +75,6 @@ public class Enemy : MonoBehaviour
                 Patroling();
                 break;
 
-            case EnemyBehaviour.Explore:
-                Explore();
-                break;
-
             case EnemyBehaviour.RunAway:
                 RunAway();
                 break;
@@ -87,24 +86,26 @@ public class Enemy : MonoBehaviour
         // animator.SetFloat("Speed", agent.velocity.magnitude);
     }
 
-    private void PasiveChasing()
-    {
-        throw new System.NotImplementedException();
-    }
-
     private void Patroling()
     {
-        throw new System.NotImplementedException();
+        Debug.Log("IA: Patroling...");
+        if(!walkPointSet) GetRandonWaypoint();
+
+        if (walkPointSet)
+        {
+            agent.SetDestination(walkPoint);
+        }
+
+        Vector3 distanceToWalkPoint = transform.position - walkPoint;
+
+        //Walkpoint Reached
+        if(distanceToWalkPoint.magnitude < 1f)
+        {
+            walkPointSet = false;
+        }
     }
 
-    public void init(EnemyBehaviour state)
-    {
-        this.state = state;
-    }
-
-    //----------------------------- funcitons ---------------------------
-
-    Vector3 GetRandonWaypoint()
+    private Vector3 GetRandonWaypoint()
     {
         //Calculate random point in range
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
@@ -128,77 +129,37 @@ public class Enemy : MonoBehaviour
             return walkPoint;
         }
     }
-
-    public void AssignTask(EnemyBehaviour inState)
+    private void ActiveChasing()
     {
-        state = inState;
-    }
-    //----------------------------- states ---------------------------
-
-    private void Explore()
-    {
-        // if (!walkPointSet) GetRandonWaypoint();
-        walkPoint = waypoints[0].position;
-
-        // if (walkPointSet)
-        // {
-        agent.SetDestination(walkPoint);
-        //}
-        // Vector3 distanceToWalkPoint = transform.position - walkPoint;
-
-        // //walkPoint reached
-        // if (distanceToWalkPoint.magnitude < 7f)
-        // {
-        //     walkPointSet = false;
-        // }
-
+        Debug.Log("chasing");
+        agent.SetDestination(Player.position);
     }
 
-    private void Farm()
+    private void PasiveChasing()
     {
-
+        //agent.SetDestination(Player.position);
+        //transform.LookAt(Player);
     }
 
     private void RunAway()
     {
-        walkPoint = queen.position;
-        agent.SetDestination(walkPoint);
-
-        Vector3 distanceToWalkPoint = transform.position - walkPoint;
-
-        //walkPoint reached
-        if (distanceToWalkPoint.magnitude < 3f)
-        {
-            state = AntBehaviour.waitForInstructions;
-        }
-    }
-
-    private void ActiveChasing()
-    {
-        Debug.Log("chasing");
-        // agent.SetDestination(player.position);
-        walkPointSet = false;
+        //Deactivate Sight
+        //Patroling();
     }
 
     private void AttackPlayer()
     {
         Debug.Log("attacking");
-        //the sure enemy doesn't move
-        agent.SetDestination(transform.position);
+        agent.SetDestination(Player.position);
+        //transform.LookAt(Player);
 
         // animator.SetTrigger("Attack");
-
-        // Vector3 playerLookAt = new Vector3(player.transform.position.x, transform.position.y, player.transform.position.z);
-        // transform.LookAt(playerLookAt);
 
         // if (!alreadyAttacked)
         // {
         //     //Attack code 
-        //     Rigidbody rb = Instantiate(projectile, transform.position, Quaternion.identity).GetComponent<Rigidbody>();
-        //     rb.AddForce(transform.forward * 32f, ForceMode.Impulse);
-        //     rb.AddForce(transform.up * 8f, ForceMode.Impulse);
-
-        //     //
+        //     
+        //
         //     alreadyAttacked = true;
         //     Invoke(nameof(ResetAttack), timeBetweenAttacks);
         // }
@@ -209,29 +170,11 @@ public class Enemy : MonoBehaviour
         alreadyAttacked = false;
     }
 
-    //----------------------------- debug ---------------------------
-
-    public void TakeDamage(int inDamage)
-    {
-        health -= inDamage;
-
-        if (health <= 0)
-        {
-            bIsHiding = false;
-            Die();
-        }
-    }
-
-    private void Die()
-    {
-        Destroy(gameObject, 0.5f);
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.layer == PlayerLayer)
         {
-            TakeDamage(15);
+            //TakeDamage(15);
         }
     }
 
