@@ -4,9 +4,7 @@ using UnityEngine;
 
 public enum EnemyBehaviour
 {
-    PasiveChase,
-    ActiveChase,
+    LastPoint,
     Patrol,
-    Explore,
-    RunAway
+    Chase
 }

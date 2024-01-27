@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour
     private EnemyBehaviour state;
     private NavMeshAgent agent;
 
+
     [SerializeField]
     private Transform Player;
 
@@ -26,54 +27,48 @@ public class Enemy : MonoBehaviour
 
     //states
     public float sightRange, attackRange;
-    public bool bIsPlayerInSightRange, bIsPlayerInAttackRange, bAttackPlayer, bHasHeardPLayer;
+    public bool bIsPatroling;
+
+    //scan variables
+    [SerializeField]
+    private float scanSpeed = 100f;
+    private float scanRange = 45f;
+    private float currentAngle = 0f;
+    private float elapsedTime;
+
+
 
 
     private void Awake()
     {
-        Player = GameObject.Find("PlayerObject").transform;
+        Player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         state = EnemyBehaviour.Patrol;
     }
 
     private void Update()
     {
-        //Check for sight and attack range
-        bIsPlayerInSightRange = Physics.CheckSphere(transform.position, sightRange, PlayerLayer);
-        bIsPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
+        elapsedTime += Time.deltaTime;
 
+        Scan();
 
-        if(!bIsPlayerInSightRange)
-        {
-            state = EnemyBehaviour.Patrol;
-        }
+        //bIsPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
 
-        if(bIsPlayerInAttackRange)
-        {
-            state = EnemyBehaviour.ActiveChase;
-            if(bIsPlayerInAttackRange)
-            {
-                state = EnemyBehaviour.PasiveChase;
-            }
-        }
+        
 
         //State tree
         switch (state)
         {
-            case EnemyBehaviour.PasiveChase:
-                PasiveChasing();
-                break;
-
-            case EnemyBehaviour.ActiveChase:
-                ActiveChasing();
-                break;
-
             case EnemyBehaviour.Patrol:
                 Patroling();
                 break;
 
-            case EnemyBehaviour.RunAway:
-                RunAway();
+            case EnemyBehaviour.LastPoint:
+                GoingToLastPoint();
+                break;
+
+            case EnemyBehaviour.Chase:
+                Chasing();
                 break;
 
             default:
@@ -82,6 +77,8 @@ public class Enemy : MonoBehaviour
 
         // animator.SetFloat("Speed", agent.velocity.magnitude);
     }
+
+   
 
     private void Patroling()
     {
@@ -105,6 +102,46 @@ public class Enemy : MonoBehaviour
 
         Debug.Log("IA: Patroling... " + distanceToWalkPoint.magnitude);
 
+    }
+
+    
+    private void Chasing()
+    {
+        Debug.Log("chasing");
+        agent.SetDestination(Player.position);
+    }
+
+    private void GoingToLastPoint()
+    {
+
+    }
+
+    //----------------------------- Functions ---------------------------
+    #region
+
+    void Scan()
+    {
+        // Rotar el rayo
+        currentAngle = scanRange * Mathf.Sin(scanSpeed * elapsedTime);
+        Quaternion rotation = Quaternion.Euler(0f, currentAngle, 0f);
+        Vector3 direction = rotation * transform.forward;
+
+        // Lanzar un rayo en la dirección del escaneo
+        Ray ray = new Ray(transform.position, direction);
+        RaycastHit hit;
+
+
+        //------------------------------- debug -----------------------------
+        if (Physics.Raycast(ray, out hit, sightRange, PlayerLayer))
+        {
+            // Realizar acciones basadas en la colisión con un obstáculo
+            Debug.DrawLine(ray.origin, hit.point, Color.red);
+        }
+        else
+        {
+            // Realizar acciones cuando no hay colisión
+            Debug.DrawRay(ray.origin, ray.direction * sightRange, Color.green);
+        }
     }
 
     private Vector3 GetRandonWaypoint()
@@ -131,54 +168,8 @@ public class Enemy : MonoBehaviour
             return walkPoint;
         }
     }
-    private void ActiveChasing()
-    {
-        Debug.Log("chasing");
-        agent.SetDestination(Player.position);
-    }
+    #endregion
 
-    private void PasiveChasing()
-    {
-        agent.SetDestination(transform.position);
-        transform.LookAt(Player);
-    }
-
-    private void RunAway()
-    {
-        //Deactivate Sight
-        //Patroling();
-    }
-
-    private void AttackPlayer()
-    {
-        Debug.Log("attacking");
-        agent.SetDestination(Player.position);
-        //transform.LookAt(Player);
-
-        // animator.SetTrigger("Attack");
-
-        // if (!alreadyAttacked)
-        // {
-        //     //Attack code 
-        //     
-        //
-        //     alreadyAttacked = true;
-        //     Invoke(nameof(ResetAttack), timeBetweenAttacks);
-        // }
-    }
-
-    private void ResetAttack()
-    {
-        alreadyAttacked = false;
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == PlayerLayer)
-        {
-            //TakeDamage(15);
-        }
-    }
 
     //----------------------------- debug---------------------------
 
@@ -186,7 +177,5 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, attackRange);
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, sightRange);
     }
 }
