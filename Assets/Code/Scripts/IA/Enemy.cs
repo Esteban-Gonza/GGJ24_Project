@@ -8,14 +8,16 @@ public class Enemy : MonoBehaviour
     // public Animator animator;
     public LayerMask groundLayer, PlayerLayer;
 
+    [SerializeField]
     private EnemyBehaviour state;
     private NavMeshAgent agent;
 
-    public Transform Player;
+    [SerializeField]
+    private Transform Player;
 
     //patroling
-    private Vector3 walkPoint;
-    private bool walkPointSet;
+    public Vector3 walkPoint;
+    public bool walkPointSet;
     public float walkPointRange;
 
     //Attacking
@@ -24,10 +26,7 @@ public class Enemy : MonoBehaviour
 
     //states
     public float sightRange, attackRange;
-    public bool bIsPlayerInSightRange, bIsPlayerInAttackRange, bIsHiding;
-
-    //waypoints 
-    public Transform[] waypoints;
+    public bool bIsPlayerInSightRange, bIsPlayerInAttackRange, bAttackPlayer, bHasHeardPLayer;
 
 
     private void Awake()
@@ -44,21 +43,19 @@ public class Enemy : MonoBehaviour
         bIsPlayerInAttackRange = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
 
 
-        //if (!bIsPlayerInSightRange && !bIsPlayerInAttackRange)
-        //{
-        //    //Patroling();
-        //    state = EnemyBehaviour.Patrol;
-        //}
+        if(!bIsPlayerInSightRange)
+        {
+            state = EnemyBehaviour.Patrol;
+        }
 
-        //if (bIsPlayerInSightRange && !bIsPlayerInAttackRange)
-        //{
-        //    ActiveChasing();
-        //}
-
-        //if (bIsPlayerInAttackRange && bIsPlayerInSightRange)
-        //{
-        //    AttackPlayer();
-        //}
+        if(bIsPlayerInAttackRange)
+        {
+            state = EnemyBehaviour.ActiveChase;
+            if(bIsPlayerInAttackRange)
+            {
+                state = EnemyBehaviour.PasiveChase;
+            }
+        }
 
         //State tree
         switch (state)
@@ -88,8 +85,10 @@ public class Enemy : MonoBehaviour
 
     private void Patroling()
     {
-        Debug.Log("IA: Patroling...");
-        if(!walkPointSet) GetRandonWaypoint();
+        if (!walkPointSet)
+        {
+            walkPoint = GetRandonWaypoint();
+        }
 
         if (walkPointSet)
         {
@@ -99,10 +98,13 @@ public class Enemy : MonoBehaviour
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
         //Walkpoint Reached
-        if(distanceToWalkPoint.magnitude < 1f)
+        if(distanceToWalkPoint.magnitude < 2f)
         {
             walkPointSet = false;
         }
+
+        Debug.Log("IA: Patroling... " + distanceToWalkPoint.magnitude);
+
     }
 
     private Vector3 GetRandonWaypoint()
@@ -137,8 +139,8 @@ public class Enemy : MonoBehaviour
 
     private void PasiveChasing()
     {
-        //agent.SetDestination(Player.position);
-        //transform.LookAt(Player);
+        agent.SetDestination(transform.position);
+        transform.LookAt(Player);
     }
 
     private void RunAway()
