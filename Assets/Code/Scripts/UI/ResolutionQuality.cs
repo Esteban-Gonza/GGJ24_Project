@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 //
 using TMPro;
-using UnityEngine.UI;
 
 public class LogicaFullScrean : MonoBehaviour
 {
+
     public Toggle toggle;
 
     public TMP_Dropdown ResolutionsDropDown;
@@ -59,16 +60,18 @@ public class LogicaFullScrean : MonoBehaviour
             {
                 CurrentResolutions = i;
             }
-
-            ResolutionsDropDown.AddOptions(opciones);
-            ResolutionsDropDown.value = CurrentResolutions;
-            ResolutionsDropDown.RefreshShownValue();
-
         }
+
+        ResolutionsDropDown.AddOptions(opciones);
+        ResolutionsDropDown.value = CurrentResolutions;
+        ResolutionsDropDown.RefreshShownValue();
     }
 
     public void ChangeResolutions(int IndiceResolucion)
     {
+
+        PlayerPrefs.SetInt(" ", ResolutionsDropDown.value);
+
         Resolution Resolucion = Resoluciones[IndiceResolucion];
         Screen.SetResolution(Resolucion.width, Resolucion.height, Screen.fullScreen);
     }
