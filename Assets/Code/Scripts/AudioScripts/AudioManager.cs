@@ -10,10 +10,12 @@ public class AudioManager : MonoBehaviour
     [SerializeField] AudioSource SFXSource;
 
 
+
     [Header("------------- Audio clip ----------")]
     public AudioClip backGround;
     public AudioClip[] musicClips;
     public AudioClip[] fxClips;
+
 
     public float minTimeBetweenSounds = 5f;  // Tiempo mínimo entre sonidos
     public float maxTimeBetweenSounds = 15f; // Tiempo máximo entre sonidos
