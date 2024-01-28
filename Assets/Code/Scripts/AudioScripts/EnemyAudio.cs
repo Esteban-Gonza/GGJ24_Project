@@ -33,11 +33,8 @@ public class EnemyAudio : MonoBehaviour
 
     public void PlayFootsteps()
     {
-        if (!footstepsAudioSource.isPlaying)
-        {
-            AudioClip randomClip = footstepsClip[Random.Range(0, footstepsClip.Length)];
-            footstepsAudioSource.PlayOneShot(randomClip);
-        }
+        AudioClip randomClip = footstepsClip[Random.Range(0, footstepsClip.Length)];
+        footstepsAudioSource.PlayOneShot(randomClip);
     }
 
     void PlayBreathing()
