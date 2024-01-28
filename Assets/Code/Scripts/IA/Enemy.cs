@@ -14,7 +14,7 @@ public class Enemy : MonoBehaviour
 
 
     [SerializeField]
-    private Transform Player;
+    private Transform player;
 
     //patroling
     public Vector3 walkPoint;
@@ -36,13 +36,24 @@ public class Enemy : MonoBehaviour
     private float currentAngle = 0f;
     private float elapsedTime;
 
+    //Speeds
+    public float runSpeed = 3.8f;
+    public float walkSpeed = 2f;
+
 
     private void Awake()
     {
-        Player = GameObject.Find("Player").transform;
+        player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         state = EnemyBehaviour.Patrol;
+
+        GameManager.onLaughter += heardPlayer;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.onLaughter -= heardPlayer;
     }
 
     private void Update()
@@ -69,12 +80,12 @@ public class Enemy : MonoBehaviour
 
         if(state != EnemyBehaviour.Patrol) 
         {
-            agent.speed = 3.6f;
+            agent.speed = runSpeed;
             bRunning = true;
         }
         else
         {
-            agent.speed = 2f;
+            agent.speed = walkSpeed;
             bRunning = false;
         }
 
@@ -134,7 +145,7 @@ public class Enemy : MonoBehaviour
 
     private void Chasing()
     {
-        Vector3 distanceToPlayer = transform.position - Player.position;
+        Vector3 distanceToPlayer = transform.position - player.position;
 
         if (distanceToPlayer.magnitude < 0.3f)
         {
@@ -142,7 +153,7 @@ public class Enemy : MonoBehaviour
         }
         else
         {
-            agent.SetDestination(Player.position);
+            agent.SetDestination(player.position);
         }
 
     }
@@ -166,6 +177,12 @@ public class Enemy : MonoBehaviour
 
     //----------------------------- Functions ---------------------------
     #region
+
+    public void heardPlayer()
+    {
+        lastPosition = player.position;
+        bPlayerSeen = true;
+    }
 
     void Scan()
     {

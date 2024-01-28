@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
+
+    public static AudioManager Instance;
+
     [Header("------------- Audio Source ----------")]
     [SerializeField] AudioSource musicSource;
+    [SerializeField] AudioSource laugthSource;
     [SerializeField] AudioSource ambientSource;
     [SerializeField] AudioSource SFXSource;
 
@@ -15,18 +19,36 @@ public class AudioManager : MonoBehaviour
     public AudioClip backGround;
     public AudioClip[] musicClips;
     public AudioClip[] fxClips;
-
+    public AudioClip[] laughtClips;
 
     public float minTimeBetweenSounds = 5f;  // Tiempo mínimo entre sonidos
     public float maxTimeBetweenSounds = 15f; // Tiempo máximo entre sonidos
 
-    private float nextSoundTime;  // Tiempo en el que se reproducirá el próximo sonido
+    private float nextSoundTime;
+    // Tiempo en el que se reproducirá el próximo sonido
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+        GameManager.onLaughter += PlayLaughtSound;
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.onLaughter -= PlayLaughtSound;
+    }
 
     private void Start()
     {
-        ambientSource.clip = backGround;
-        ambientSource.Play();
+        musicSource.clip = backGround;
+        musicSource.Play();
 
         SetNextSoundTime();
     }
@@ -56,6 +78,7 @@ public class AudioManager : MonoBehaviour
             // Establecer el próximo tiempo de reproducción del sonido
             SetNextSoundTime();
         }
+
     }
 
     void PlayRandomMusic(AudioClip[] clips)
@@ -71,6 +94,16 @@ public class AudioManager : MonoBehaviour
     {
         // Elegir aleatoriamente un clip de la lista
         AudioClip randomClip = clips[Random.Range(0, clips.Length)];
+        // Reproducir el clip
+        laugthSource.PlayOneShot(randomClip);
+    }
+
+    void PlayLaughtSound()
+    {
+        float value = GameManager.Instance.laugherValue;
+
+        // Elegir aleatoriamente un clip de la lista
+        AudioClip randomClip = laughtClips[(int)Map(value, 0, 100, 0, laughtClips.Length)];
 
         // Reproducir el clip
         SFXSource.PlayOneShot(randomClip);
@@ -80,5 +113,11 @@ public class AudioManager : MonoBehaviour
     {
         // Calcular el próximo tiempo de reproducción del sonido en un intervalo aleatorio
         nextSoundTime = Time.time + Random.Range(minTimeBetweenSounds, maxTimeBetweenSounds);
+    }
+
+
+    float Map(float s, float a1, float a2, float b1, float b2)
+    {
+        return b1 + (s - a1) * (b2 - b1) / (a2 - a1);
     }
 }

@@ -29,7 +29,8 @@ public class GasTrap : MonoBehaviour
     {
         if (playerInsideTrigger)
         {
-            GameManager.Instance.laugherValue += increaseLaughAmount * Time.deltaTime;
+            //GameManager.Instance.laugherValue += increaseLaughAmount * Time.deltaTime;
+            GameManager.Instance.changeLaughterValue(increaseLaughAmount * Time.deltaTime);
         }
     }
 }
