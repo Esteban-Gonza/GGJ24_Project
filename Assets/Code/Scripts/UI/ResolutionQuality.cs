@@ -5,16 +5,15 @@ using UnityEngine.UI;
 //
 using TMPro;
 
-public class LogicaFullScrean : MonoBehaviour
+public class LogicaFullScreen : MonoBehaviour
 {
-
     public Toggle toggle;
 
-    public TMP_Dropdown ResolutionsDropDown;
-    Resolution[] Resoluciones;
 
-    // Start is called before the first frame update
-    void Start()
+    public TMP_Dropdown resolucionesDropDown;
+    Resolution[] resoluciones;
+
+   void Start()
     {
         if (Screen.fullScreen)
         {
@@ -25,9 +24,10 @@ public class LogicaFullScrean : MonoBehaviour
             toggle.isOn = false;
         }
 
-        CheckSolution();
-
+        // Llama a RevisarResolucion después de establecer el estado del toggle
+        RevisarResolucion();
     }
+
 
     // Update is called once per frame
     void Update()
@@ -40,39 +40,40 @@ public class LogicaFullScrean : MonoBehaviour
         Screen.fullScreen = Active;
     }
 
-    public void CheckSolution()
+    public void RevisarResolucion()
     {
-        Resoluciones = Screen.resolutions;
-        ResolutionsDropDown.ClearOptions();
+        resoluciones = Screen.resolutions;
+        resolucionesDropDown.ClearOptions();
         List<string> opciones = new List<string>();
-        int CurrentResolutions = 0;
+        int resolucionActual = 0;
 
-
-        for (int i = 0; i < Resoluciones.Length; i++)
+        for (int i = 0; i < resoluciones.Length; i++)
         {
-            string option = Resoluciones[i].width + " x " + Resoluciones[i].height;
-            opciones.Add(option);
-                
-                
-                
-            if(Screen.fullScreen && Resoluciones[i].width == Screen.currentResolution.width &&
-               Resoluciones[i].height == Screen.currentResolution.height)
+            string opcion = resoluciones[i].width + " x " + resoluciones[i].height;
+            opciones.Add(opcion);
+
+            if (Screen.fullScreen && resoluciones[i].width == Screen.currentResolution.width &&
+                resoluciones[i].height == Screen.currentResolution.height)
             {
-                CurrentResolutions = i;
+                resolucionActual = i;
             }
+             
         }
+        resolucionesDropDown.AddOptions(opciones);
+        resolucionesDropDown.value = resolucionActual;
+        resolucionesDropDown.RefreshShownValue();
 
-        ResolutionsDropDown.AddOptions(opciones);
-        ResolutionsDropDown.value = CurrentResolutions;
-        ResolutionsDropDown.RefreshShownValue();
+        resolucionesDropDown.value = PlayerPrefs.GetInt("numeroResolucion", resolucionesDropDown.value);
+
     }
 
-    public void ChangeResolutions(int IndiceResolucion)
+    public void cambiarResolucion(int indiceResolucion)
     {
+        PlayerPrefs.SetInt("numeroResolucion", resolucionesDropDown.value);
 
-        PlayerPrefs.SetInt(" ", ResolutionsDropDown.value);
-
-        Resolution Resolucion = Resoluciones[IndiceResolucion];
-        Screen.SetResolution(Resolucion.width, Resolucion.height, Screen.fullScreen);
+        Resolution resolucion = resoluciones[resolucionesDropDown.value];
+        Screen.SetResolution(resolucion.width, resolucion.height, Screen.fullScreen);
     }
+
+
 }
