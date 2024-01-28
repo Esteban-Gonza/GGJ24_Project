@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    // public Animator animator;
+    public Animator animator;
     public LayerMask groundLayer, PlayerLayer;
 
     [SerializeField]
@@ -27,6 +27,7 @@ public class Enemy : MonoBehaviour
     public float sightRange, attackRange;
     public bool bPlayerSeen;
     public bool bAttackPlayer;
+    private bool bRunning;
 
     //scan variables
     [SerializeField]
@@ -40,6 +41,7 @@ public class Enemy : MonoBehaviour
     {
         Player = GameObject.Find("Player").transform;
         agent = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
         state = EnemyBehaviour.Patrol;
     }
 
@@ -49,7 +51,7 @@ public class Enemy : MonoBehaviour
 
         Scan();
 
-        if(bPlayerSeen)
+        if (bPlayerSeen)
         {
             state = EnemyBehaviour.LastPoint;
         }
@@ -60,9 +62,20 @@ public class Enemy : MonoBehaviour
 
         bAttackPlayer = Physics.CheckSphere(transform.position, attackRange, PlayerLayer);
 
-        if (bAttackPlayer) 
+        if (bAttackPlayer)
         {
             state = EnemyBehaviour.Chase;
+        }
+
+        if(state != EnemyBehaviour.Patrol) 
+        {
+            agent.speed = 3.6f;
+            bRunning = true;
+        }
+        else
+        {
+            agent.speed = 2f;
+            bRunning = false;
         }
 
 
@@ -85,10 +98,15 @@ public class Enemy : MonoBehaviour
                 break;
         }
 
-        // animator.SetFloat("Speed", agent.velocity.magnitude);
+        if (animator)
+        {
+            animator.SetFloat("Speed", agent.velocity.magnitude);
+            animator.SetBool("Running", bRunning);
+
+        }
     }
 
-   
+
 
     private void Patroling()
     {
@@ -102,10 +120,12 @@ public class Enemy : MonoBehaviour
             agent.SetDestination(walkPoint);
         }
 
+        
+
         Vector3 distanceToWalkPoint = transform.position - walkPoint;
 
         //Walkpoint Reached
-        if(distanceToWalkPoint.magnitude < 2f)
+        if (distanceToWalkPoint.magnitude < 2f)
         {
             walkPointSet = false;
         }
@@ -114,11 +134,23 @@ public class Enemy : MonoBehaviour
 
     }
 
-    
+
     private void Chasing()
     {
         Debug.Log("chasing");
-        agent.SetDestination(Player.position);
+        
+        Vector3 distanceToPlayer = transform.position - Player.position;
+
+        if (distanceToPlayer.magnitude < 0.3f)
+        {
+            agent.SetDestination(transform.position);
+            animator.SetTrigger("Attack");
+        }
+        else
+        {
+            agent.SetDestination(Player.position);
+        }
+
     }
 
     private void GoingToLastPoint()
