@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject playerHUD;
 
     public float laugherValue;
+
+    public static event Action onLaughter;
 
     private void Awake()
     {
@@ -70,4 +74,12 @@ public class GameManager : MonoBehaviour
         playerHUD.SetActive(false);
         deathUIAnimator.SetTrigger("Death");
     }
+
+    public void changeLaughterValue(float inValue)
+    {
+        laugherValue += inValue;
+        onLaughter?.Invoke();//invoca el evento
+    }
+
+    
 }
