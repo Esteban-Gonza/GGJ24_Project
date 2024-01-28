@@ -11,9 +11,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float remainingTime;
 
-    public Slider laughometer;
-    public float increaseAmount = 5f;
-    public float decreaseAmount = 5f;
+    [SerializeField] Slider laughometerSlider;
+    [SerializeField] private float decreaseLaughAmount;
+
+    [SerializeField] private Animator deathUIAnimator;
+    [SerializeField] private GameObject playerHUD;
+
+    public float laugherValue;
 
     private void Awake()
     {
@@ -27,6 +31,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        laughometerSlider.value = laugherValue;
+
+    }
+
     private void Update()
     {
         if(remainingTime > 0) 
@@ -38,8 +48,26 @@ public class GameManager : MonoBehaviour
             remainingTime = 0;
         }
 
+        laughometerSlider.value = laugherValue;
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            laugherValue -= decreaseLaughAmount;
+        }
+
+        if(Input.GetKeyDown(KeyCode.Y)) 
+        {
+            Death();
+        }
+
         int minutes = Mathf.FloorToInt(remainingTime / 60);
         int seconds = Mathf.FloorToInt(remainingTime % 60);
         timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
+    public void Death()
+    {
+        playerHUD.SetActive(false);
+        deathUIAnimator.SetTrigger("Death");
     }
 }
