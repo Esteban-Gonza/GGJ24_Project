@@ -13,20 +13,23 @@ public class LogicaFullScreen : MonoBehaviour
     public TMP_Dropdown resolucionesDropDown;
     Resolution[] resoluciones;
 
-   void Start()
+    void Start()
     {
-        if (Screen.fullScreen)
+        if (toggle != null)
         {
-            toggle.isOn = true;
-        }
-        else
-        {
-            toggle.isOn = false;
+            if (Screen.fullScreen)
+            {
+                toggle.isOn = true;
+            }
+            else
+            {
+                toggle.isOn = false;
+            }
         }
 
-        // Llama a RevisarResolucion después de establecer el estado del toggle
         RevisarResolucion();
     }
+
 
 
     // Update is called once per frame
