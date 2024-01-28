@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance;
 
     [SerializeField] private TextMeshProUGUI timerText;
-    [SerializeField] private float remainingTime;
+    public float remainingTime;
 
     [SerializeField] Slider laughometerSlider;
     [SerializeField] private float decreaseLaughAmount;
