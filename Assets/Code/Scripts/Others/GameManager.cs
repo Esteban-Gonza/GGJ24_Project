@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour
@@ -73,6 +74,7 @@ public class GameManager : MonoBehaviour
     {
         playerHUD.SetActive(false);
         deathUIAnimator.SetTrigger("Death");
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public void changeLaughterValue(float inValue)
@@ -81,5 +83,13 @@ public class GameManager : MonoBehaviour
         onLaughter?.Invoke();//invoca el evento
     }
 
-    
+    public void Replay()
+    {
+        SceneManager.LoadScene("Asylum_Map");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

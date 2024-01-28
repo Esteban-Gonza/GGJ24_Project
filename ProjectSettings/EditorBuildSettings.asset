@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Level/Scenes/MainMenu.unity
+    guid: dd167948438daac4697550b369d4a923
+  - enabled: 1
+    path: Assets/Level/Scenes/Asylum_Map.unity
+    guid: fad4ab29809f6ba45aa421fabeb1e91b
   m_configObjects: {}
