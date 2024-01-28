@@ -6,12 +6,14 @@ public class GasTrap : MonoBehaviour
 {
     private bool playerInsideTrigger = false;
 
+    [SerializeField] private float increaseLaughAmount = 5f;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInsideTrigger = true;
-            GameManager.Instance.laughometer.value++;
+            GameManager.Instance.laugherValue++;
         }
     }
 
@@ -27,7 +29,7 @@ public class GasTrap : MonoBehaviour
     {
         if (playerInsideTrigger)
         {
-            GameManager.Instance.laughometer.value += GameManager.Instance.increaseAmount * Time.deltaTime;
+            GameManager.Instance.laugherValue += increaseLaughAmount * Time.deltaTime;
         }
     }
 }
