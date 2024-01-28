@@ -129,22 +129,16 @@ public class Enemy : MonoBehaviour
         {
             walkPointSet = false;
         }
-
-        Debug.Log("IA: Patroling... " + distanceToWalkPoint.magnitude);
-
     }
 
 
     private void Chasing()
     {
-        Debug.Log("chasing");
-        
         Vector3 distanceToPlayer = transform.position - Player.position;
 
         if (distanceToPlayer.magnitude < 0.3f)
         {
             agent.SetDestination(transform.position);
-            animator.SetTrigger("Attack");
         }
         else
         {
@@ -168,9 +162,6 @@ public class Enemy : MonoBehaviour
         {
             bPlayerSeen = false;
         }
-
-        Debug.Log("IA: Last pos... " + distanceToLastPosition.magnitude);
-
     }
 
     //----------------------------- Functions ---------------------------
