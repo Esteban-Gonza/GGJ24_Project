@@ -332,8 +332,8 @@ GameObject:
   - component: {fileID: 132820605}
   - component: {fileID: 132820607}
   - component: {fileID: 132820608}
-  - component: {fileID: 132820609}
   - component: {fileID: 132820610}
+  - component: {fileID: 132820611}
   m_Layer: 0
   m_Name: OptionsHandler
   m_TagString: Untagged
@@ -398,20 +398,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropdown: {fileID: 1716360314}
   Calidad: 0
---- !u!114 &132820609
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 132820604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1142ee1d1efa9554d8498275adc6c884, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggle: {fileID: 0}
-  ResolutionsDropDown: {fileID: 1941075301}
 --- !u!114 &132820610
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,6 +411,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameScene: Asylum_Map
+--- !u!114 &132820611
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132820604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1142ee1d1efa9554d8498275adc6c884, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  toggle: {fileID: 2066995922}
+  resolucionesDropDown: {fileID: 1941075301}
 --- !u!1 &134725673
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,8 +608,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Option A
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: c2b6f83fa2f4f8c4fabd78fb5ca83f76, type: 2}
-  m_sharedMaterial: {fileID: 8837634520294908357, guid: c2b6f83fa2f4f8c4fabd78fb5ca83f76, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
+  m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -699,8 +699,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.5, y: 0}
-  m_SizeDelta: {x: -35, y: -13}
+  m_AnchoredPosition: {x: 5.7999725, y: -2.9500024}
+  m_SizeDelta: {x: -8.399958, y: -7.1000047}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &298485243
 GameObject:
@@ -1414,7 +1414,7 @@ RectTransform:
   m_Father: {fileID: 327234900}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4252,7 +4252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1301369037
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5275,7 +5275,7 @@ RectTransform:
   m_Father: {fileID: 506761065}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5640,7 +5640,7 @@ RectTransform:
   m_GameObject: {fileID: 1885400370}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2066995921}
@@ -5648,8 +5648,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 28}
+  m_AnchoredPosition: {x: 75, y: 0}
+  m_SizeDelta: {x: -150, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &1926082560
 GameObject:
@@ -5804,9 +5804,9 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 132820609}
-        m_TargetAssemblyTypeName: LogicaFullScrean, Assembly-CSharp
-        m_MethodName: ChangeResolutions
+      - m_Target: {fileID: 132820611}
+        m_TargetAssemblyTypeName: LogicaFullScreen, Assembly-CSharp
+        m_MethodName: cambiarResolucion
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -5978,7 +5978,7 @@ RectTransform:
   m_GameObject: {fileID: 1986738059}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2000577586}
@@ -5986,8 +5986,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 28}
+  m_AnchoredPosition: {x: 60, y: 0}
+  m_SizeDelta: {x: -120, y: 28}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &2000577585
 GameObject:
