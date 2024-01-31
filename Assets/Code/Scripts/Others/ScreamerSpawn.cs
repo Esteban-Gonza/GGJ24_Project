@@ -14,12 +14,15 @@ public class ScreamerSpawn : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             GameManager.Instance.changeLaughterValue(15f);
             GameObject obj = Instantiate(screamerPrefab[Random.Range(0, screamerPrefab.Length)]);
+
             obj.transform.parent = playerCameraRoot.transform;
-            
+            obj.transform.localPosition = new Vector3(0, 0, 2.5f);
+            obj.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
             Destroy(gameObject);
         }
     }

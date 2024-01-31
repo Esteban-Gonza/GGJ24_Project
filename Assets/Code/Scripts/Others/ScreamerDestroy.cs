@@ -9,8 +9,6 @@ public class ScreamerDestroy : MonoBehaviour
 
     private void Awake()
     {
-        transform.localPosition = new Vector3(0, 0, 1.6f);
-
         Destroy(gameObject, (float)video.length);
     }
 }
